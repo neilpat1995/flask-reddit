@@ -1,0 +1,38 @@
+<html>
+    <head>
+        {% if subreddit_name %}
+            <title>Reddit - {{subreddit_name}}</title>
+        {% else %}
+            <title>Reddit</title>
+        {% endif %}
+    </head>
+
+    <body>
+        <div>
+            <p>
+                <a href={{url_for('index')}}>Reddit</a> 
+                {% if subreddit_name %}
+                    <a href={{url_for('subreddit', subreddit_name=subreddit_name)}}>{{subreddit_name}}</a>
+                {% endif %}
+                <a href={{url_for('login')}}>Login</a>
+            </p>
+        </div>
+        <hr>
+    
+        <div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {% block content %}
+        {% endblock %}
+    
+    </body>
+</html>

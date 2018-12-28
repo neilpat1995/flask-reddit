@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+    {% block content %} 
+        <a href={{url_for('create_thread')}}>Create New Thread</a>
+        {% for thread,subreddit in threads_subreddits %}
+            
+            <div>
+                <table>
+                    <tr>
+                        <td>Posted by {{thread.author}} on {{thread.date}}</td>
+                    </tr>
+                    <tr>
+                        <td><h2><b>{{thread.title}}</b></h2></td>
+                    </tr>
+                    <tr>
+                        <td>{{thread.upvotes}} upvotes</td>
+                    </tr>
+                </table>
+            </div><br>
+        
+        {% endfor %} 
+    
+    {% endblock %}
