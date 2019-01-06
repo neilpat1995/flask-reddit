@@ -9,7 +9,7 @@
             <div>
                 <table>
                     <tr>
-                        <td><a href={{url_for('subreddit', subreddit_name=subreddit)}}>{{subreddit_name}}</a>
+                        <td><a href={{url_for('subreddit', subreddit_name=subreddit.name)}}>{{subreddit.name}}</a>
                     <tr>
                         <td>Posted by {{thread.author}} on {{thread.date}}</td>
                     </tr>

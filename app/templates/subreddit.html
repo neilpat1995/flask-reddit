@@ -2,7 +2,7 @@
 
     {% block content %} 
         <a href={{url_for('create_thread')}}>Create New Thread</a>
-        {% for thread,subreddit in threads_subreddits %}
+        {% for thread in threads %}
             
             <div>
                 <table>

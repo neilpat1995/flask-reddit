@@ -14,7 +14,12 @@
                 {% if subreddit_name %}
                     <a href={{url_for('subreddit', subreddit_name=subreddit_name)}}>{{subreddit_name}}</a>
                 {% endif %}
-                <a href={{url_for('login')}}>Login</a>
+                {% if current_user.is_anonymous %}
+                    <a href={{url_for('login')}}>Login</a>
+                {% else %}
+                    <a href={{url_for('logout')}}>Logout</a>
+                    <p> Welcome, {{current_user.username}}!</p>
+                {% endif %}
             </p>
         </div>
         <hr>
