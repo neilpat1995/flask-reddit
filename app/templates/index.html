@@ -4,20 +4,20 @@
         
         <a href={{url_for('create_thread')}}>Create New Thread</a>
 
-        {% for thread,subreddit in threads_subreddits %}
+        {% for thread_author_subreddit in threads_authors_subreddits %}
             
             <div>
                 <table>
                     <tr>
-                        <td><a href={{url_for('subreddit', subreddit_name=subreddit.name)}}>{{subreddit.name}}</a>
+                        <td><a href={{url_for('subreddit', subreddit_name=thread_author_subreddit[2].name)}}>{{thread_author_subreddit[2].name}}</a>
                     <tr>
-                        <td>Posted by {{thread.author}} on {{thread.date}}</td>
+                        <td>Posted by {{thread_author_subreddit[1].username}} on {{thread_author_subreddit[0].date}}</td>
                     </tr>
                     <tr>
-                        <td><h2><b>{{thread.title}}</b></h2></td>
+                        <td><h2><b>{{thread_author_subreddit[0].title}}</b></h2></td>
                     </tr>
                     <tr>
-                        <td>{{thread.upvotes}} upvotes</td>
+                        <td>{{thread_author_subreddit[0].upvotes}} upvotes</td>
                     </tr>
                 </table>
             </div><br>

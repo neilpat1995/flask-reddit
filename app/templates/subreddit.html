@@ -2,18 +2,18 @@
 
     {% block content %} 
         <a href={{url_for('create_thread')}}>Create New Thread</a>
-        {% for thread in threads %}
+        {% for subreddit_thread in subreddit_threads_authors %}
             
             <div>
                 <table>
                     <tr>
-                        <td>Posted by {{thread.author}} on {{thread.date}}</td>
+                        <td>Posted by {{subreddit_thread[1].username}} on {{subreddit_thread[0].date}}</td>
                     </tr>
                     <tr>
-                        <td><h2><b>{{thread.title}}</b></h2></td>
+                        <td><h2><b>{{subreddit_thread[0].title}}</b></h2></td>
                     </tr>
                     <tr>
-                        <td>{{thread.upvotes}} upvotes</td>
+                        <td>{{subreddit_thread[0].upvotes}} upvotes</td>
                     </tr>
                 </table>
             </div><br>

@@ -29,7 +29,7 @@ class Thread(db.Model):
     title = db.Column(db.String(128), index=True, unique=True)
     body = db.Column(db.String(256))
     date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    upvotes = db.Column(db.Integer)
+    upvotes = db.Column(db.Integer, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     subreddit_id = db.Column(db.Integer, db.ForeignKey('subreddit.id'))
 
@@ -50,6 +50,7 @@ class Comment(db.Model):
 class Subreddit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
+    threads = db.relationship('Thread', backref='subreddit', lazy='dynamic')
 
     def __repr__(self):
         return '<Subreddit {}>'.format(self.name)
