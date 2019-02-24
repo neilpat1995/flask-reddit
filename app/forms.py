@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User, Thread
 
@@ -12,7 +12,7 @@ class LoginForm(FlaskForm):
 class CreateThreadForm(FlaskForm):
     subreddit = StringField('Subreddit', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired(), Length(min=16, max=128)])
-    body = StringField('Body', validators=[DataRequired(), Length(max=256)])
+    body = TextAreaField('Body', validators=[DataRequired(), Length(max=256)])
     submit = SubmitField('Submit')
 
     def validate_title(self, title):
@@ -36,3 +36,16 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email = email.data).first()
         if user is not None:
             raise ValidationError('The specified email address is already in use.')
+
+class CreateCommentForm(FlaskForm):
+    body = TextAreaField('Enter Your Comment', validators=[DataRequired(), Length(max=256)])
+    submit = SubmitField('Submit')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=64)])
+    submit = SubmitField('Request Password Reset')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Verify New Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

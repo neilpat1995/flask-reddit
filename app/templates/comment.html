@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Post A Comment</h1>
+
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.body.label }}:<br>
+            {{ form.body(rows=6, cols=75) }}
+        </p>
+
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
+ 
+{% endblock %}

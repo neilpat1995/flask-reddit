@@ -7,11 +7,17 @@
             <div>
                 <table>
                     <tr>
-                        <td>Posted by {{subreddit_thread[1].username}} on {{subreddit_thread[0].date}}</td>
+                        <td>Posted by <a href={{ url_for('user', username=subreddit_thread[1].username) }}{{subreddit_thread[1].username}} on {{subreddit_thread[0].date}}</td>
                     </tr>
                     <tr>
-                        <td><h2><b>{{subreddit_thread[0].title}}</b></h2></td>
+                        <td><a href={{ url_for('view_thread', thread_title=subreddit_thread[0].title) }}><b>{{subreddit_thread[0].title}}</b></a></td>
                     </tr>
+                    
+                    <tr>
+                        <td><a href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=subreddit_thread[0].title, is_upvote=1) }}>Upvote</a></td>
+                        <td><a href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=subreddit_thread[0].title, is_upvote=0) }}>Downvote</a></td>
+                    </tr>
+
                     <tr>
                         <td>{{subreddit_thread[0].upvotes}} upvotes</td>
                     </tr>

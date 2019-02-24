@@ -11,17 +11,35 @@
                     <tr>
                         <td><a href={{url_for('subreddit', subreddit_name=thread_author_subreddit[2].name)}}>{{thread_author_subreddit[2].name}}</a>
                     <tr>
-                        <td>Posted by {{thread_author_subreddit[1].username}} on {{thread_author_subreddit[0].date}}</td>
+                        <td>Posted by <a href={{ url_for('user', username=thread_author_subreddit[1].username) }}>{{thread_author_subreddit[1].username}}</a> on {{thread_author_subreddit[0].date}}</td>
                     </tr>
                     <tr>
-                        <td><h2><b>{{thread_author_subreddit[0].title}}</b></h2></td>
+                        <td><a href={{url_for('view_thread', thread_title=thread_author_subreddit[0].title)}}><b>{{thread_author_subreddit[0].title}}</b></a></td>
                     </tr>
+
+                    <tr>
+                        <td><a href={{ url_for('index', thread_title=thread_author_subreddit[0].title, is_upvote=1) }}>Upvote</a></td>
+                        <td><a href={{ url_for('index', thread_title=thread_author_subreddit[0].title, is_upvote=-1) }}>Downvote</a></td>
+                    </tr>
+
                     <tr>
                         <td>{{thread_author_subreddit[0].upvotes}} upvotes</td>
                     </tr>
                 </table>
             </div><br>
         
-        {% endfor %} 
-    
+        {% endfor %}
+
+        <table>
+            <tr>
+                {% if prev_url %}
+                    <td><a href={{ prev_url }}>Newer Threads</a></td>
+                {% endif %}
+
+                {% if next_url %}
+                    <td><a href={{ next_url }}>Older Threads</a></td>
+                {% endif %}
+            </tr>
+        </table> 
+
     {% endblock %}

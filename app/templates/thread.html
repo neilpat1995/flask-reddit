@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+    {% block content %}
+        <table>
+            <tr><td><a href={{ url_for('subreddit', subreddit_name=subreddit.name) }}>{{ subreddit.name }}</a></td></tr>
+            <tr><td>Posted by <a href={{ url_for('user', username=author.username) }}>{{author.username}}</a> on {{ thread.date }}</td></tr> 
+            <tr><td><b>{{ thread.title }}</b></td></tr>
+            <tr><td>{{ thread.body }}</td></tr>
+            <tr>
+                <td><a href={{ url_for('view_thread', thread_title=thread.title, is_upvote=1) }}>Upvote</a></td>
+                <td><a href={{ url_for('view_thread', thread_title=thread.title, is_upvote=-1) }}>Downvote</a></td>
+            </tr>
+            <tr><td>{{ thread.upvotes }} upvotes</td></tr>
+        </table>
+
+        <hr>
+
+        <a href={{ url_for('add_comment') }}>Post a Comment</a>
+
+        <hr>
+
+        {% for comment in comments %}
+            <table>
+                <tr>
+                    <td>{{ comment.user.username }}</td>
+                    <td>{{ comment.upvotes }} upvotes</td>
+                    <td>{{ comment.date }}</td>
+                </tr>
+                <tr><td>{{ comment.body }}</td>
+            </table><br>
+        {% endfor %}
+
+    {% endblock %}

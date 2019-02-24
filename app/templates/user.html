@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+    {% block content %} 
+        
+        <h1>{{ username }}</h1>
+
+        {% for user_thread in user_threads %}
+            
+            <div>
+                <table>
+                    <tr>
+                        <td><a href={{url_for('subreddit', subreddit_name=user_thread.subreddit.name)}}>{{user_thread.subreddit.name}}</a>
+                    <tr>
+                        <td>Posted by {{username}} on {{user_thread.date}}</td>
+                    </tr>
+                    <tr>
+                        <td><a href={{url_for('view_thread', thread_title=user_thread.title)}}><b>{{user_thread.title}}</b></a></td>
+                    </tr>
+
+                    <tr>
+                        <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=1) }}>Upvote</a></td>
+                        <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=-1) }}>Downvote</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>{{user_thread.upvotes}} upvotes</td>
+                    </tr>
+                </table>
+            </div><br>
+        
+        {% endfor %}
+
+        <table>
+            <tr>
+                {% if prev_url %}
+                    <td><a href={{ prev_url }}>Newer Threads</a></td>
+                {% endif %}
+
+                {% if next_url %}
+                    <td><a href={{ next_url }}>Older Threads</a></td>
+                {% endif %}
+            </tr>
+        </table> 
+
+    {% endblock %}
