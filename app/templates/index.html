@@ -1,45 +1,34 @@
 {% extends "base.html" %}
 
-    {% block content %} 
+    {% block app_content %} 
         
-        <a href={{url_for('create_thread')}}>Create New Thread</a>
+        <a class="btn btn-primary" href={{url_for('create_thread')}}>{{ _('Create New Thread') }}</a>
 
-        {% for thread_author_subreddit in threads_authors_subreddits %}
-            
-            <div>
-                <table>
-                    <tr>
-                        <td><a href={{url_for('subreddit', subreddit_name=thread_author_subreddit[2].name)}}>{{thread_author_subreddit[2].name}}</a>
-                    <tr>
-                        <td>Posted by <a href={{ url_for('user', username=thread_author_subreddit[1].username) }}>{{thread_author_subreddit[1].username}}</a> on {{thread_author_subreddit[0].date}}</td>
+        {% for thread_author in threads_authors %}
+            {% include "_thread.html" %}  
+                        <td><a class="btn btn-info" href= {{ url_for('index', page=page_num, thread_title=thread_author[0].title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
+                        <td><a class="btn btn-info" href= {{ url_for('index', page=page_num, thread_title=thread_author[0].title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
                     </tr>
+         
                     <tr>
-                        <td><a href={{url_for('view_thread', thread_title=thread_author_subreddit[0].title)}}><b>{{thread_author_subreddit[0].title}}</b></a></td>
+                        <td>{{ _('%(num_upvotes)s upvotes', num_upvotes=thread_author[0].upvotes) }} </td>
                     </tr>
+                </tbody>
+            </table>
 
-                    <tr>
-                        <td><a href={{ url_for('index', thread_title=thread_author_subreddit[0].title, is_upvote=1) }}>Upvote</a></td>
-                        <td><a href={{ url_for('index', thread_title=thread_author_subreddit[0].title, is_upvote=-1) }}>Downvote</a></td>
-                    </tr>
-
-                    <tr>
-                        <td>{{thread_author_subreddit[0].upvotes}} upvotes</td>
-                    </tr>
-                </table>
-            </div><br>
-        
         {% endfor %}
 
-        <table>
-            <tr>
-                {% if prev_url %}
-                    <td><a href={{ prev_url }}>Newer Threads</a></td>
-                {% endif %}
 
-                {% if next_url %}
-                    <td><a href={{ next_url }}>Older Threads</a></td>
-                {% endif %}
-            </tr>
-        </table> 
-
+        <nav aria-label="...">
+          <ul class="pager">
+            <li class={% if prev_url %} "previous" {% else %} "previous disabled" {% endif %}>
+                <a href={{ prev_url or '#' }}><span aria-hidden="true">&larr;</span> {{ _('Newer') }}
+                </a>
+            </li>
+            <li class={% if next_url %} "next" {% else %} "next disabled" {% endif %}>
+                <a href={{ next_url or '#' }}>{{ _('Older') }} <span aria-hidden="true">&rarr;</span></a>
+            </li>
+          </ul>
+        </nav>
+ 
     {% endblock %}

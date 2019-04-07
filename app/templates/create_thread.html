@@ -1,40 +1,11 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block content %}
-    <h1>Create New Thread</h1>
-    <form action="" method="post" novalidate>
-        {{form.hidden_tag()}}
-        
-        <p>
-            {{form.subreddit.label}}:<br>
-            {{form.subreddit(size=64)}}
-            
-            {% for subreddit_error in form.subreddit.errors %}
-                <span style="color:red;font-weight:bold;">{{subreddit_error}}</span> 
-            {% endfor %}
-        </p>
-        
-        <p>
-            {{form.title.label}}:<br>
-            {{form.title(size=64)}}
-            
-            {% for title_error in form.title.errors %}
-                <span style="color:red;font-weight:bold;">{{title_error}}</span> 
-            {% endfor %}
-        </p>
-
-        <p>
-            {{form.body.label}}:<br>
-            {{form.body(rows=6, cols=75)}}
-
-            {% for body_error in form.body.errors %}
-                <span style="color:red;font-weight:bold;">{{body_error}}</span> 
-            {% endfor %}
-        </p>
-
-        <p>
-            {{form.submit()}}
-        </p>
-    </form>
-
+{% block app_content %}
+    <h1>{{ _('Create New Thread') }}</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
 {% endblock %}

@@ -1,43 +1,74 @@
-<html>
-    <head>
-        {% if subreddit_name %}
-            <title>Reddit - {{subreddit_name}}</title>
-        {% else %}
-            <title>Reddit</title>
-        {% endif %}
-    </head>
+{% extends 'bootstrap/base.html' %}
 
-    <body>
-        <div>
-            <p>
-                <a href={{url_for('index')}}>Reddit</a> 
-                {% if subreddit_name %}
-                    <a href={{url_for('subreddit', subreddit_name=subreddit_name)}}>{{subreddit_name}}</a>
-                {% endif %}
-                {% if current_user.is_anonymous %}
-                    <a href={{url_for('login')}}>Login</a>
-                {% else %}
-                    <a href={{url_for('logout')}}>Logout</a>
-                    <p> Welcome, {{current_user.username}}!</p>
-                {% endif %}
-            </p>
-        </div>
-        <hr>
-    
-        <div>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
-        </div>
+{% block title %}
+    {% if page_title %}
+        {{page_title}}    
+    {% else %}
+        {{ _('Reddit') }}
+    {% endif %}
+{% endblock %}
 
-        {% block content %}
+{% block navbar %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href={{ url_for('index') }}>{{ _('Reddit') }}</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    {% if subreddit_name %}
+                        <li><a href={{url_for('subreddit', subreddit_name=subreddit_name)}}>{{ _('%(subreddit_name)s', subreddit_name=subreddit_name) }}</a></li>
+                    {% endif %}
+                    {% if current_user.is_anonymous %}
+                        <li><a href={{url_for('login')}}>{{ _('Login') }}</a></li>
+                    {% else %}
+                        <li><a href={{url_for('logout')}}>{{ _('Logout') }}</a><li>
+                    {% endif %}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if not current_user.is_anonymous %}
+                        <li><a href={{url_for('user', username=current_user.username)}}>{{ _('%(current_user)s', current_user=current_user.username) }}</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissable" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block app_content %}
         {% endblock %}
-    
-    </body>
-</html>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href={{url_for('static', filename='css/navbar-fixed-top.css')}}>
+    <link rel="stylesheet" href={{url_for('static', filename='css/table-outer-border.css')}}>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang(g.locale) }}
+{% endblock %}

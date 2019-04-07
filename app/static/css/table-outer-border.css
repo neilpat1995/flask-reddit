@@ -1,0 +1,15 @@
+.table-outer-border {
+    max-width: 1000px;
+    table-layout: fixed;
+    border-collapse: collapse !important;
+    border-spacing: 0px;
+    border: 3px solid #ddd;
+}
+
+.table-outer-border>tbody>tr>td {
+    border: none;
+}
+
+
+
+

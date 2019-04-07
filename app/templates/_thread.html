@@ -1,0 +1,14 @@
+<table class="table table-bordered table-outer-border" align="center">
+    <tbody>
+        <tr>
+            <td><a href={{url_for('subreddit', subreddit_name=thread_author[0].subreddit.name)}}>{{ _('%(subreddit_name)s', subreddit_name=thread_author[0].subreddit.name) }}</a></td>
+        </tr>
+        <tr>
+            {% set user_link %}
+                <a href={{ url_for('user', username=thread_author[1].username) }}>{{ _('%(username)s', username=thread_author[1].username) }}</a>
+            {% endset %}
+            <td> {{ _('Posted by %(user)s %(date)s', user=user_link, date=moment(thread_author[0].date).fromNow()) }}</td>
+        </tr>
+        <tr>
+            <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title) }}><b>{{ _('%(title)s', title=thread_author[0].title) }}</b></a></td>
+        </tr>

@@ -1,29 +1,30 @@
 {% extends "base.html" %}
 
-    {% block content %} 
-        <a href={{url_for('create_thread')}}>Create New Thread</a>
-        {% for subreddit_thread in subreddit_threads_authors %}
-            
-            <div>
-                <table>
+    {% block app_content %} 
+        <a class="btn btn-primary" href={{url_for('create_thread')}}>{{ _('Create New Thread') }}</a>
+        {% for thread_author in threads_authors %}            
+            {% include "_thread.html" %} 
                     <tr>
-                        <td>Posted by <a href={{ url_for('user', username=subreddit_thread[1].username) }}{{subreddit_thread[1].username}} on {{subreddit_thread[0].date}}</td>
+                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread_author[0].title, is_upvote=1, page=page_num) }}>{{ _('Upvote') }}</a></td>
+                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread_author[0].title, is_upvote=-1, page=page_num) }}>{{ _('Downvote') }}</a></td>
                     </tr>
+     
                     <tr>
-                        <td><a href={{ url_for('view_thread', thread_title=subreddit_thread[0].title) }}><b>{{subreddit_thread[0].title}}</b></a></td>
+                        <td>{{ _('%(num_upvotes)s upvotes', thread_author[0].upvotes) }}</td>
                     </tr>
-                    
-                    <tr>
-                        <td><a href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=subreddit_thread[0].title, is_upvote=1) }}>Upvote</a></td>
-                        <td><a href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=subreddit_thread[0].title, is_upvote=0) }}>Downvote</a></td>
-                    </tr>
+                </tbody>
+            </table>
+        {% endfor %}
 
-                    <tr>
-                        <td>{{subreddit_thread[0].upvotes}} upvotes</td>
-                    </tr>
-                </table>
-            </div><br>
-        
-        {% endfor %} 
-    
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class={% if prev_url %} "previous" {% else %} "previous disabled" {% endif %}>
+                <a href={{ prev_url or '#' }}><span aria-hidden="true">&larr;</span> {{ _('Newer') }}</a>
+            </li>
+            <li class={% if next_url %} "next" {% else %} "next disabled" {% endif %}>
+                <a href={{ next_url or '#' }}>{{ _('Older') }} <span aria-hidden="true">&rarr;</span></a>
+            </li>
+        </ul>
+    </nav>
+
     {% endblock %}

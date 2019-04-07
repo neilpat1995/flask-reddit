@@ -1,18 +1,11 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block content %}
-    <h1>Post A Comment</h1>
-
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.body.label }}:<br>
-            {{ form.body(rows=6, cols=75) }}
-        </p>
-
-        <p>
-            {{ form.submit() }}
-        </p>
-    </form>
- 
+{% block app_content %}
+    <h1>{{ _('Post A Comment') }}</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
 {% endblock %}

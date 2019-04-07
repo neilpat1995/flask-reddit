@@ -1,45 +1,39 @@
 {% extends "base.html" %}
 
-    {% block content %} 
+    {% block app_content %} 
         
-        <h1>{{ username }}</h1>
-
+        <h1>{{ _('%(username)s', username=username) }}</h1>
         {% for user_thread in user_threads %}
-            
-            <div>
-                <table>
-                    <tr>
-                        <td><a href={{url_for('subreddit', subreddit_name=user_thread.subreddit.name)}}>{{user_thread.subreddit.name}}</a>
-                    <tr>
-                        <td>Posted by {{username}} on {{user_thread.date}}</td>
-                    </tr>
-                    <tr>
-                        <td><a href={{url_for('view_thread', thread_title=user_thread.title)}}><b>{{user_thread.title}}</b></a></td>
-                    </tr>
+            <table>
+                <tr>
+                    <td><a href={{url_for('subreddit', subreddit_name=user_thread.subreddit.name)}}>{{ _('%(subreddit_name)s, subreddit_name=user_thread.subreddit.name) }}</a>
+                <tr>
+                    <td>{{ _('Posted by %(username)s %(date)s, username=username, date=moment(user_thread.date).fromNow()) }}</td>
+                </tr>
+                <tr>
+                    <td><a href={{url_for('view_thread', thread_title=user_thread.title)}}><b>{{ _('%(title)s', title=user_thread.title) }}</b></a></td>
+                </tr>
 
-                    <tr>
-                        <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=1) }}>Upvote</a></td>
-                        <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=-1) }}>Downvote</a></td>
-                    </tr>
+                <tr>
+                    <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
+                    <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
+                </tr>
 
-                    <tr>
-                        <td>{{user_thread.upvotes}} upvotes</td>
-                    </tr>
-                </table>
-            </div><br>
-        
+                <tr>
+                    <td>{{ _('%(num_upvotes)s upvotes', num_upvotes=user_thread.upvotes) }}</td>
+                </tr>
+            </table>
+            <br> 
         {% endfor %}
 
-        <table>
-            <tr>
-                {% if prev_url %}
-                    <td><a href={{ prev_url }}>Newer Threads</a></td>
-                {% endif %}
-
-                {% if next_url %}
-                    <td><a href={{ next_url }}>Older Threads</a></td>
-                {% endif %}
-            </tr>
-        </table> 
-
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class={% if prev_url %}"previous"{% else %}"previous disabled"{% endif %}>
+                    <a href={{ prev_url or '#' }}><span aria-hidden="true">&larr;</span> {{ _('Newer') }}</a>
+                </li>
+                <li class={% if next_url %}"next"{% else %}"next disabled"{% endif %}>
+                    <a href={{ next_url or '#' }}>{{ _('Older') }} <span aria-hidden="true">&rarr;</span></a>
+                </li>
+            </ul>
+        </nav>
     {% endblock %}
