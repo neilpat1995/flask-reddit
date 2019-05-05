@@ -3,7 +3,8 @@
     {% block app_content %}
         {% for thread_author in thread_author_singleton %}
             {% include "_thread.html" %}
-                    <tr><td>{{ _('%(body)s', body=thread_author[0].body) }}</td></tr>
+                    <tr><td><span id="thread_body{{ thread_author[0].id }}">{{ thread_author[0].body }}</span></td></tr>
+                    <tr><td><span id="translated_thread_body{{ thread_author[0].id }}"></span></td></tr>
                     <tr>
                         <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
                         <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
@@ -24,7 +25,12 @@
                     <td>{{ _('%(num_upvotes)s upvotes', num_upvotes=comment.upvotes) }}</td>
                     <td>{{ _('%(date)s', date=moment(comment.date).fromNow()) }}</td>
                 </tr>
-                <tr><td>{{ _('%(body)s', body=comment.body) }}</td>
+                <tr><td><span id="comment{{ comment.id }}">{{ comment.body }}</span></td></tr>
+                <tr>
+                    {% if comment.language and comment.language != g.locale %}
+                        <td><span id="translate_comment{{ comment.id }}"><a href="javascript:translate('#comment{{ comment.id }}', '#translate_comment{{ comment.id }}', '{{ comment.language }}', '{{ g.locale }}');">{{ _('Translate') }}</a></span></td>
+                    {% endif %}
+                </tr>
             </table><br>
         {% endfor %}
 

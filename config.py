@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
@@ -13,3 +16,4 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['neilpat1995@gmail.com'] #Need to modify when email-sending account is established and actual email sending is enabled
     LANGUAGES = ['en', 'es']
+    MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')

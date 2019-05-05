@@ -46,6 +46,7 @@ class Thread(db.Model):
     upvotes = db.Column(db.Integer, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     subreddit_id = db.Column(db.Integer, db.ForeignKey('subreddit.id'))
+    language = db.Column(db.String(5))
     comments = db.relationship('Comment', backref='thread', lazy='dynamic')
 
     def __repr__(self):
@@ -58,6 +59,7 @@ class Comment(db.Model):
     upvotes = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
     thread_id = db.Column(db.Integer, db.ForeignKey('thread.id'))
+    language = db.Column(db.String(5))
 
     def __repr__(self):
         return '<Comment {}>'.format(self.body) 
@@ -65,6 +67,7 @@ class Comment(db.Model):
 class Subreddit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
+    language = db.Column(db.String(5))
     threads = db.relationship('Thread', backref='subreddit', lazy='dynamic')
 
     def __repr__(self):

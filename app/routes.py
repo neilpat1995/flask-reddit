@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, flash, request, session, g
+from flask import render_template, url_for, redirect, flash, request, session, g, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_babel import _, get_locale
 
@@ -6,9 +6,11 @@ from app import app, db
 from app.forms import LoginForm, CreateThreadForm, RegistrationForm, CreateCommentForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User, Thread, Comment, Subreddit
 from app.email import send_password_reset_email
+from app.translate import translate
 
 from werkzeug.urls import url_parse
 from datetime import datetime 
+from guess_language import guess_language
 
 @app.before_request
 def before_request():
@@ -82,7 +84,10 @@ def user(username):
 def create_thread():
     form = CreateThreadForm()
     if form.validate_on_submit():
-        thread = Thread(title=form.title.data, body=form.body.data, user=current_user, subreddit=Subreddit.query.filter_by(name=form.subreddit.data).first())
+        thread_language = guess_language(form.body.data)
+        if thread_language == 'UNKNOWN' or len(thread_language) > 5:
+            thread_language = ''
+        thread = Thread(title=form.title.data, body=form.body.data, user=current_user, language=thread_language, subreddit=Subreddit.query.filter_by(name=form.subreddit.data).first())
         db.session.add(thread)
         db.session.commit() 
         return redirect(session['prior_thread_create_page'])
@@ -110,7 +115,10 @@ def view_thread(thread_title):
 def add_comment():
     form = CreateCommentForm()
     if form.validate_on_submit():
-        comment = Comment(body=form.body.data, user=current_user, thread=Thread.query.filter_by(title=session['current_thread_title']).first())
+        comment_language = guess_language(form.body.data)
+        if comment_language == 'UNKNOWN' or len(comment_language) > 5:
+            comment_language = ''
+        comment = Comment(body=form.body.data, user=current_user, language=comment_language, thread=Thread.query.filter_by(title=session['current_thread_title']).first())
         db.session.add(comment)
         db.session.commit()    
         return redirect(url_for('view_thread', thread_title=session['current_thread_title']))
@@ -180,3 +188,21 @@ def reset_password(token):
         flash(_('Your password has been reset.'))
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form, page_title=_('Reddit - Reset Password'))
+
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+    return jsonify({'text': translate(request.form['text'],
+                                      request.form['source_language'],
+                                      request.form['dest_language'])})
+
+@app.route('/translate_thread', methods=['POST'])
+@login_required
+def translate_thread_text():
+    if request.form.has_key('body_text'):
+        # Perform title and body translations
+        return jsonify({'title_text': translate(request.form['title_text'], request.form['source_language'], request.form['dest_language']),
+                        'body_text': translate(request.form['body_text'], request.form['source_language'], request.form['dest_language'])})
+    else:
+        # Perform only title translation
+        return jsonify({'title_text': translate(request.form['title_text'], request.form['source_language'], request.form['dest_language'])})

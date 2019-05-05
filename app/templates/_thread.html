@@ -1,6 +1,18 @@
 <table class="table table-bordered table-outer-border" align="center">
     <tbody>
         <tr>
+            {% if thread_author[0].language and thread_author[0].language != g.locale %}
+                <td><a href="javascript:translate_thread(
+                                                        '#thread_title{{ thread_author[0].id }}',
+                                                        '#thread_body{{ thread_author[0].id }}',
+                                                        '#translated_thread_title{{ thread_author[0].id }}',
+                                                        '#translated_thread_body{{ thread_author[0].id }}',
+                                                        '{{ thread_author[0].language }}',
+                                                        '{{ g.locale }}')">
+                    {{ _('Translate') }}</a></td>
+            {% endif %}
+        </tr>
+        <tr>
             <td><a href={{url_for('subreddit', subreddit_name=thread_author[0].subreddit.name)}}>{{ _('%(subreddit_name)s', subreddit_name=thread_author[0].subreddit.name) }}</a></td>
         </tr>
         <tr>
@@ -10,5 +22,8 @@
             <td> {{ _('Posted by %(user)s %(date)s', user=user_link, date=moment(thread_author[0].date).fromNow()) }}</td>
         </tr>
         <tr>
-            <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title) }}><b>{{ _('%(title)s', title=thread_author[0].title) }}</b></a></td>
+            <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title) }}><b><span id="thread_title{{ thread_author[0].id }}">{{ thread_author[0].title }}</span></b></a></td>
+        </tr>
+        <tr>
+            <td><span id="translated_thread_title{{ thread_author[0].id }}"></span></td>
         </tr>

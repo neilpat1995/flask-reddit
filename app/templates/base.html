@@ -71,4 +71,54 @@
     {{ super() }}
     {{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
+
+    <script>
+        function translate(sourceElem, destElem, sourceLang, destLang) {
+            $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
+            $.post('/translate', {
+                text: $(sourceElem).text(),
+                source_language: sourceLang,
+                dest_language: destLang
+            }).done(function(response) {
+                $(destElem).text(response['text'])
+            }).fail(function() {
+                $(destElem).text("{{ _('Error: Could not contact server.') }}");
+            });
+        }
+        
+        function translate_thread(sourceTitleElem, sourceBodyElem, destTitleElem, destBodyElem, sourceLang, destLang) {
+            if (document.getElementById(sourceBodyElem.substring(1)) != null) {
+                //Currently viewing a specific thread
+                $(destTitleElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
+                $(destBodyElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
+                $.post('/translate_thread', {
+                    title_text: $(sourceTitleElem).text(),
+                    body_text: $(sourceBodyElem).text(),
+                    source_language: sourceLang,
+                    dest_language: destLang
+                }).done(function(response) {
+                    $(destTitleElem).text(response['title_text'])
+                    $(destBodyElem).text(response['body_text']) 
+                }).fail(function() {
+                    $(destTitleElem).text("{{ _('Error: Could not contact server.') }}")
+                    $(destBodyElem).text("{{ _('Error: Could not contact server.') }}");
+                });
+            }
+
+            else {
+                //Viewing main subreddit page or index page
+                $(destTitleElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
+                $.post('/translate_thread', {
+                    title_text: $(sourceTitleElem).text(),
+                    source_language: sourceLang,
+                    dest_language: destLang
+                }).done(function(response) {
+                    $(destTitleElem).text(response['title_text'])
+                }).fail(function() {
+                    $(destTitleElem).text("{{ _('Error: Could not contact server.') }}");
+                });
+            }
+        }
+    
+    </script>
 {% endblock %}
