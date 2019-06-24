@@ -31,6 +31,13 @@
                         <li><a href={{url_for('logout')}}>{{ _('Logout') }}</a><li>
                     {% endif %}
                 </ul>
+                {% if g.search_form %}
+                    <form class="navbar-form navbar-left" method="get" action="{{ url_for('search') }}">
+                        <div class="form-group">
+                            {{ g.search_form.q(size=30, class='form-control', placeholder=g.search_form.q.label.text) }}
+                        </div>
+                    </form>
+                {% endif %}
                 <ul class="nav navbar-nav navbar-right">
                     {% if not current_user.is_anonymous %}
                         <li><a href={{url_for('user', username=current_user.username)}}>{{ _('%(current_user)s', current_user=current_user.username) }}</a></li>
@@ -73,11 +80,10 @@
     {{ moment.lang(g.locale) }}
 
     <script>
-        function translate(sourceElem, destElem, sourceLang, destLang) {
+        function translate(sourceElem, destElem, destLang) {
             $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
             $.post('/translate', {
                 text: $(sourceElem).text(),
-                source_language: sourceLang,
                 dest_language: destLang
             }).done(function(response) {
                 $(destElem).text(response['text'])
@@ -86,7 +92,7 @@
             });
         }
         
-        function translate_thread(sourceTitleElem, sourceBodyElem, destTitleElem, destBodyElem, sourceLang, destLang) {
+        function translate_thread(sourceTitleElem, sourceBodyElem, destTitleElem, destBodyElem, destLang) {
             if (document.getElementById(sourceBodyElem.substring(1)) != null) {
                 //Currently viewing a specific thread
                 $(destTitleElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
@@ -94,7 +100,6 @@
                 $.post('/translate_thread', {
                     title_text: $(sourceTitleElem).text(),
                     body_text: $(sourceBodyElem).text(),
-                    source_language: sourceLang,
                     dest_language: destLang
                 }).done(function(response) {
                     $(destTitleElem).text(response['title_text'])
@@ -110,7 +115,6 @@
                 $(destTitleElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
                 $.post('/translate_thread', {
                     title_text: $(sourceTitleElem).text(),
-                    source_language: sourceLang,
                     dest_language: destLang
                 }).done(function(response) {
                     $(destTitleElem).text(response['title_text'])
@@ -119,6 +123,17 @@
                 });
             }
         }
-    
+        
+        function translate_search_results_title(sourceStaticElem, sourceTranslateElem, destElem, destLang) {
+            $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
+            $.post('/translate', {
+                text: $(sourceTranslateElem).text(),
+                dest_language: destLang
+            }).done(function(response) {
+                $(destElem).text($(sourceStaticElem).text() + response['text'])
+            }).fail(function() {
+                $(destElem).text("{{ _('Error: Could not contact server.') }}");
+            });
+        }
     </script>
 {% endblock %}

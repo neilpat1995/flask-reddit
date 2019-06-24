@@ -28,7 +28,7 @@
                 <tr><td><span id="comment{{ comment.id }}">{{ comment.body }}</span></td></tr>
                 <tr>
                     {% if comment.language and comment.language != g.locale %}
-                        <td><span id="translate_comment{{ comment.id }}"><a href="javascript:translate('#comment{{ comment.id }}', '#translate_comment{{ comment.id }}', '{{ comment.language }}', '{{ g.locale }}');">{{ _('Translate') }}</a></span></td>
+                        <td><span id="translate_comment{{ comment.id }}"><a href="javascript:translate('#comment{{ comment.id }}', '#translate_comment{{ comment.id }}', '{{ g.locale }}');">{{ _('Translate') }}</a></span></td>
                     {% endif %}
                 </tr>
             </table><br>

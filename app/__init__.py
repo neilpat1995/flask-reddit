@@ -8,6 +8,7 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_babel import Babel
 from flask_babel import lazy_gettext as _l
+from elasticsearch import Elasticsearch
 
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
@@ -25,10 +26,11 @@ moment = Moment(app)
 babel = Babel(app)
 mail = Mail(app)
 
+app.elasticsearch = Elasticsearch(app.config['ELASTICSEARCH_URL']) if app.config['ELASTICSEARCH_URL'] else None
+
 @babel.localeselector
 def get_locale():
-#    return request.accept_languages.best_match(app.config['LANGUAGES'])
-    return 'es'    
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 if not app.debug:
     if app.config['MAIL_SERVER']:
@@ -57,4 +59,4 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Reddit startup')
 
-from app import routes, models
+from app import routes, models, errors

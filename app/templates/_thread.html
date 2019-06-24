@@ -7,7 +7,6 @@
                                                         '#thread_body{{ thread_author[0].id }}',
                                                         '#translated_thread_title{{ thread_author[0].id }}',
                                                         '#translated_thread_body{{ thread_author[0].id }}',
-                                                        '{{ thread_author[0].language }}',
                                                         '{{ g.locale }}')">
                     {{ _('Translate') }}</a></td>
             {% endif %}
@@ -17,7 +16,7 @@
         </tr>
         <tr>
             {% set user_link %}
-                <a href={{ url_for('user', username=thread_author[1].username) }}>{{ _('%(username)s', username=thread_author[1].username) }}</a>
+                <a href={{ url_for('user', username=thread_author[0].user.username) }}>{{ _('%(username)s', username=thread_author[0].user.username) }}</a>
             {% endset %}
             <td> {{ _('Posted by %(user)s %(date)s', user=user_link, date=moment(thread_author[0].date).fromNow()) }}</td>
         </tr>

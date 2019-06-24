@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_babel import _, get_locale
 
 from app import app, db
-from app.forms import LoginForm, CreateThreadForm, RegistrationForm, CreateCommentForm, ResetPasswordRequestForm, ResetPasswordForm
+from app.forms import LoginForm, CreateThreadForm, RegistrationForm, CreateCommentForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm
 from app.models import User, Thread, Comment, Subreddit
 from app.email import send_password_reset_email
 from app.translate import translate
@@ -14,6 +14,7 @@ from guess_language import guess_language
 
 @app.before_request
 def before_request():
+    g.search_form = SearchForm()
     g.locale = str(get_locale())
 
 @app.route('/')
@@ -134,6 +135,8 @@ def login():
         if requested_user:
             if requested_user.check_password(form.password.data):
                 login_user(requested_user, remember = form.remember_me.data)
+                current_user.last_sign_in = datetime.utcnow()
+                db.session.commit()
                 request_redirect_page = request.args.get('next')
                 if request_redirect_page is None or url_parse(request_redirect_page).netloc != '':
                     return redirect(url_for('index'))
@@ -193,7 +196,6 @@ def reset_password(token):
 @login_required
 def translate_text():
     return jsonify({'text': translate(request.form['text'],
-                                      request.form['source_language'],
                                       request.form['dest_language'])})
 
 @app.route('/translate_thread', methods=['POST'])
@@ -201,8 +203,21 @@ def translate_text():
 def translate_thread_text():
     if request.form.has_key('body_text'):
         # Perform title and body translations
-        return jsonify({'title_text': translate(request.form['title_text'], request.form['source_language'], request.form['dest_language']),
-                        'body_text': translate(request.form['body_text'], request.form['source_language'], request.form['dest_language'])})
+        return jsonify({'title_text': translate(request.form['title_text'], request.form['dest_language']),
+                        'body_text': translate(request.form['body_text'], request.form['dest_language'])})
     else:
         # Perform only title translation
-        return jsonify({'title_text': translate(request.form['title_text'], request.form['source_language'], request.form['dest_language'])})
+        return jsonify({'title_text': translate(request.form['title_text'], request.form['dest_language'])})
+
+@app.route('/search', methods=['GET'])
+def search():
+    if not g.search_form.validate():
+        return redirect(url_for('index'))
+    page = request.args.get('page', 1, type=int)
+    threads, total = Thread.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
+    threads = threads.all()
+    total = total['value']
+    next_url = url_for('search', q=g.search_form.q.data, page=page + 1) if total > page * app.config['POSTS_PER_PAGE'] else None
+    prev_url = url_for('search', q=g.search_form.q.data, page=page - 1) if page > 1 else None
+    threads_list = zip(threads, [None] * len(threads)) # Temporarily to match expected input for template
+    return render_template('search.html', title=_('Search'), threads_list=threads_list, next_url=next_url, prev_url=prev_url) 

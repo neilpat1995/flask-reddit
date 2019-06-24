@@ -7,18 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-28 16:53-0400\n"
-"PO-Revision-Date: 2019-04-07 00:40-0400\n"
+"POT-Creation-Date: 2019-06-16 18:36-0400\n"
+"PO-Revision-Date: 2019-06-16 18:37-0400\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
+"X-Generator: Poedit 2.2.3\n"
 
-#: app/__init__.py:22
+#: app/__init__.py:23
 msgid "Please log in to access this page."
 msgstr "Por favor, identifícate para acceder a la página."
 
@@ -26,160 +27,197 @@ msgstr "Por favor, identifícate para acceder a la página."
 msgid "[Reddit] Reset Your Password"
 msgstr "[Reddit] Restablece tu contraseña"
 
-#: app/forms.py:8 app/forms.py:25
+#: app/forms.py:9 app/forms.py:26
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: app/forms.py:9 app/forms.py:27
+#: app/forms.py:10 app/forms.py:28
 msgid "Password"
 msgstr "Contraseña"
 
-#: app/forms.py:10
+#: app/forms.py:11
 msgid "Remember Me"
 msgstr "Recuérdame"
 
-#: app/forms.py:11
+#: app/forms.py:12
 msgid "Sign In"
 msgstr "Iniciar sesión"
 
-#: app/forms.py:14
+#: app/forms.py:15
 msgid "Subreddit"
 msgstr "Subreddit"
 
-#: app/forms.py:15
+#: app/forms.py:16
 msgid "Title"
 msgstr "Título"
 
-#: app/forms.py:16
+#: app/forms.py:17
 msgid "Body"
 msgstr "Cuerpo de página"
 
-#: app/forms.py:17 app/forms.py:29 app/forms.py:43
+#: app/forms.py:18 app/forms.py:30 app/forms.py:44
 msgid "Submit"
 msgstr "Enviar"
 
-#: app/forms.py:22
+#: app/forms.py:23
 msgid "The specified thread title is already in use."
 msgstr "El título del hilo especificado ya está en uso."
 
-#: app/forms.py:26 app/forms.py:46
+#: app/forms.py:27 app/forms.py:47
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: app/forms.py:28
+#: app/forms.py:29
 msgid "Confirm Password"
 msgstr "Restablece tu contraseña"
 
-#: app/forms.py:34
+#: app/forms.py:35
 msgid "The specified username is already in use."
 msgstr "El nombre de usuario especificado ya está en uso."
 
-#: app/forms.py:39
+#: app/forms.py:40
 msgid "The specified email address is already in use."
 msgstr "La dirección de correo electrónico especificada ya está en uso."
 
-#: app/forms.py:42
+#: app/forms.py:43
 msgid "Enter Your Comment"
 msgstr "Ingresa tu comentario"
 
-#: app/forms.py:47
+#: app/forms.py:48
 msgid "Request Password Reset"
 msgstr "Petición para la recuperación de contraseña"
 
-#: app/forms.py:50
+#: app/forms.py:51
 msgid "New Password"
 msgstr "Nueva contraseña"
 
-#: app/forms.py:51
+#: app/forms.py:52
 msgid "Verify New Password"
 msgstr "Verificar nueva contraseña"
 
-#: app/forms.py:52 app/templates/login.html:13
+#: app/forms.py:53 app/templates/login.html:13
 #: app/templates/reset_password.html:5
 #: app/templates/reset_password_request.html:5
 msgid "Reset Password"
 msgstr "Restablece tu contraseña"
 
-#: app/routes.py:61
+#: app/forms.py:56
+msgid "Search for user or thread"
+msgstr "Buscar usuario o hilo"
+
+#: app/models.py:62
+msgid "<User {}>"
+msgstr "<Usuario {}>"
+
+#: app/models.py:99
+msgid "<Thread {}>"
+msgstr "<Hilo {}>"
+
+#: app/models.py:111
+msgid "<Comment {}>"
+msgstr "<Comentario {}>"
+
+#: app/models.py:120
+msgid "<Subreddit {}>"
+msgstr "<Subreddit {}>"
+
+#: app/routes.py:62
 #, python-format
 msgid "Reddit - %(subreddit_name)s"
 msgstr "Reddit - %(subreddit_name)s"
 
-#: app/routes.py:80
+#: app/routes.py:81
 #, python-format
 msgid "Reddit - u/%(username)s"
 msgstr "Reddit - u/%(username)s"
 
-#: app/routes.py:94
+#: app/routes.py:95
 msgid "Reddit - Create Thread"
 msgstr "Reddit - Crear hilo"
 
-#: app/routes.py:111
+#: app/routes.py:112
 #, python-format
 msgid "Reddit - %(subreddit_name)s - %(thread_title)s"
-msgstr ""
+msgstr "Reddit - %(subreddit_name)s - %(thread_title)s"
 
-#: app/routes.py:125
+#: app/routes.py:126
 msgid "Reddit - Post a Comment"
 msgstr "Reddit - Publicar un comentario"
 
-#: app/routes.py:141
+#: app/routes.py:144
 msgid "Invalid username or password. Please try again."
 msgstr "Usuario o contraseña invalido. Inténtalo de nuevo."
 
-#: app/routes.py:143
+#: app/routes.py:146
 msgid "Reddit - Log In"
 msgstr "Reddit - Iniciar sesión"
 
-#: app/routes.py:160
+#: app/routes.py:163
 msgid "Your account was successfully created."
 msgstr "Su cuenta fue creada exitosamente."
 
-#: app/routes.py:162
+#: app/routes.py:165
 msgid "Reddit - Register"
 msgstr "Reddit - Registro"
 
-#: app/routes.py:173
+#: app/routes.py:176
 msgid "Check your email for instructions on how to reset your password."
 msgstr ""
 "Consulte su correo electrónico para obtener instrucciones sobre cómo "
 "restablecer su contraseña."
 
-#: app/routes.py:175
+#: app/routes.py:178
 msgid "Reddit - Reset Password Request"
 msgstr "Reddit - Petición para la recuperación de contraseña"
 
-#: app/routes.py:188
+#: app/routes.py:191
 msgid "Your password has been reset."
 msgstr "Tu contraseña ha sido restablecida."
 
-#: app/routes.py:190
+#: app/routes.py:193
 msgid "Reddit - Reset Password"
 msgstr "Reddit - Restablece tu contraseña"
 
+#: app/routes.py:223
+msgid "Search"
+msgstr "Buscar"
+
 #: app/translate.py:8
 msgid "Error: the translation service is not configured."
-msgstr ""
+msgstr "Error: el servicio de traducción no está configurado."
 
-#: app/translate.py:15
+#: app/translate.py:22
+msgid "Translation API response code: "
+msgstr "Código de respuesta de la API de traducción:"
+
+#: app/translate.py:23
+msgid "The requested text to translate was: "
+msgstr "El texto solicitado para traducir era:"
+
+#: app/translate.py:24
+msgid "The requested translation destination language was: "
+msgstr "El idioma de destino de traducción solicitado era:"
+
+#: app/translate.py:25
 msgid "Error: the translation service failed."
-msgstr ""
+msgstr "Error: el servicio de traducción falló."
 
-#: app/templates/_thread.html:12 app/templates/thread.html:31
+#: app/templates/_thread.html:11 app/templates/search.html:19
+#: app/templates/thread.html:31
 msgid "Translate"
-msgstr ""
+msgstr "Traducir"
 
-#: app/templates/_thread.html:16 app/templates/base.html:26
+#: app/templates/_thread.html:15 app/templates/base.html:26
 #, python-format
 msgid "%(subreddit_name)s"
-msgstr ""
+msgstr "%(subreddit_name)s"
 
-#: app/templates/_thread.html:20 app/templates/thread.html:24
+#: app/templates/_thread.html:19 app/templates/thread.html:24
 #, python-format
 msgid "%(username)s"
 msgstr "%(username)s"
 
-#: app/templates/_thread.html:22
+#: app/templates/_thread.html:21
 #, python-format
 msgid "Posted by %(user)s %(date)s"
 msgstr "Publicado por %(user)s %(date)s"
@@ -196,15 +234,16 @@ msgstr "Iniciar sesión"
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: app/templates/base.html:36
+#: app/templates/base.html:43
 #, python-format
 msgid "%(current_user)s"
 msgstr "%(current_user)s"
 
-#: app/templates/base.html:85 app/templates/base.html:106
-#: app/templates/base.html:107 app/templates/base.html:121
+#: app/templates/base.html:91 app/templates/base.html:108
+#: app/templates/base.html:109 app/templates/base.html:122
+#: app/templates/base.html:135
 msgid "Error: Could not contact server."
-msgstr ""
+msgstr "Error: No se pudo contactar con el servidor."
 
 #: app/templates/comment.html:5
 msgid "Post A Comment"
@@ -225,8 +264,8 @@ msgstr "Voto arriba"
 msgid "Downvote"
 msgstr "Voto negativo"
 
-#: app/templates/index.html:14 app/templates/subreddit.html:13
-#: app/templates/thread.html:12 app/templates/thread.html:25
+#: app/templates/index.html:14 app/templates/thread.html:12
+#: app/templates/thread.html:25
 #, python-format
 msgid "%(num_upvotes)s upvotes"
 msgstr "%(num_upvotes)s votos arriba"
@@ -247,6 +286,18 @@ msgstr "Crear una nueva cuenta"
 msgid "Register"
 msgstr "Registro"
 
+#: app/templates/search.html:12
+msgid "Search Results for: "
+msgstr "Resultados de la búsqueda para:"
+
+#: app/templates/search.html:29
+msgid "Previous results"
+msgstr "Resultados anteriores"
+
+#: app/templates/search.html:34
+msgid "Next results"
+msgstr "Próximos resultados"
+
 #: app/templates/thread.html:19
 msgid "Post a Comment"
 msgstr "Reddit - Publicar un comentario"
@@ -256,9 +307,5 @@ msgstr "Reddit - Publicar un comentario"
 msgid "%(date)s"
 msgstr "%(date)s"
 
-#~ msgid "%(title)s"
-#~ msgstr ""
-
-#~ msgid "%(body)s"
-#~ msgstr ""
-
+#~ msgid "The requested translation dest_language was: "
+#~ msgstr "La traducción solicitada dest_language fue:"

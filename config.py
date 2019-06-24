@@ -17,3 +17,4 @@ class Config(object):
     ADMINS = ['neilpat1995@gmail.com'] #Need to modify when email-sending account is established and actual email sending is enabled
     LANGUAGES = ['en', 'es']
     MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
