@@ -2,9 +2,6 @@
 
 {% block scripts %}
     {{ super() }}
-    <script>
-        
-    </script> 
 {% endblock %}
 
 {% block app_content %}
@@ -17,24 +14,48 @@
                                                         '#search_query',
                                                         '#translated_search_title',
                                                         '{{ g.locale }}')">{{ _("Translate") }}</a>
-    {% for thread_author in threads_list %}
-        {% include '_thread.html' %}
-    {% endfor %}
-    <br>
-    <nav aria-label="...">
-        <ul class="pager">
-            <li class="previous{% if not prev_url %} disabled{% endif %}">
-                <a href="{{ prev_url or '#' }}">
-                    <span aria-hidden="true">&larr;</span>
-                    {{ _('Previous results') }}
-                </a>
-            </li>
-            <li class="next{% if not next_url %} disabled{% endif %}">
-                <a href="{{ next_url or '#' }}">
-                    {{ _('Next results') }}
-                    <span aria-hidden="true">&rarr;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('search', index='thread', q=query) }}">Threads</a>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('search', index='user', q=query) }}">Users</a>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('search', index='subreddit', q=query) }}">Subreddits</a>
+
+    {% if not results_list %} 
+        <h3>No search results were found. Please enter a new search query or search category.</h3>
+    {% else %}
+
+        {% if index == 'thread' %}
+            {% for thread_author in results_list %}
+                {% include '_thread.html' %}
+            {% endfor %}   
+        {% endif %}    
+        
+        {% if index == 'user' %}
+            {% for user_dummy in results_list %}
+                {% include '_user.html' %}
+            {% endfor %}   
+        {% endif %}    
+
+        {% if index == 'subreddit' %}
+            {% for subreddit_author in results_list %}
+                {% include '_subreddit.html' %}
+            {% endfor %}   
+        {% endif %}    
+
+        <br>    
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous{% if not prev_url %} disabled{% endif %}">
+                    <a href="{{ prev_url or '#' }}">
+                        <span aria-hidden="true">&larr;</span>
+                        {{ _('Previous results') }}
+                    </a>
+                </li>
+                <li class="next{% if not next_url %} disabled{% endif %}">
+                    <a href="{{ next_url or '#' }}">
+                        {{ _('Next results') }}
+                        <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
 {% endblock %}

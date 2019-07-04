@@ -1,0 +1,25 @@
+<table class="table table-bordered table-outer-border" align="center">
+    <tbody>
+        <tr>
+            {% if subreddit_author[0].language and subreddit_author[0].language != g.locale %}
+                <td><a href="javascript:translate_thread(
+                                                        '#subreddit_title{{ subreddit_author[0].id }}',
+                                                        '#subreddit_description{{ subreddit_author[0].id }}',
+                                                        '#translated_subreddit_title{{ subreddit_author[0].id }}',
+                                                        '#translated_subreddit_description{{ subreddit_author[0].id }}',
+                                                        '{{ g.locale }}')">
+                    {{ _('Translate') }}</a></td>
+            {% endif %}
+        </tr>
+        
+        <tr>
+            <td><a href={{url_for('subreddit', subreddit_name=subreddit_author[0].name)}}><span class="subreddit_title{{ subreddit_author[0].id }}">{{ subreddit_author[0].name }}</span></a></td>
+        </tr>
+        
+        <tr><td><span class="translated_subreddit_title{{ subreddit_author[0].id }}"></span></td></tr>
+        
+        <tr>
+            <td><span class="subreddit_description{{ subreddit_author[0].id }}">{{ subreddit_author[0].description }}</span></td>
+        </tr>
+        
+        <tr><td><span class="translated_subreddit_title{{ subreddit_author[0].id }}"></span></td></tr> 

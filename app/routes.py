@@ -11,6 +11,7 @@ from app.translate import translate
 from werkzeug.urls import url_parse
 from datetime import datetime 
 from guess_language import guess_language
+from sqlalchemy.exc import OperationalError
 
 @app.before_request
 def before_request():
@@ -211,13 +212,25 @@ def translate_thread_text():
 
 @app.route('/search', methods=['GET'])
 def search():
+    print 'Hit the /search route!'
     if not g.search_form.validate():
         return redirect(url_for('index'))
     page = request.args.get('page', 1, type=int)
-    threads, total = Thread.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
-    threads = threads.all()
-    total = total['value']
-    next_url = url_for('search', q=g.search_form.q.data, page=page + 1) if total > page * app.config['POSTS_PER_PAGE'] else None
-    prev_url = url_for('search', q=g.search_form.q.data, page=page - 1) if page > 1 else None
-    threads_list = zip(threads, [None] * len(threads)) # Temporarily to match expected input for template
-    return render_template('search.html', title=_('Search'), threads_list=threads_list, next_url=next_url, prev_url=prev_url) 
+    target_index = request.args.get('index', 'thread')
+    if target_index == 'thread':
+        results, total = Thread.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
+        print 'Called Thread.search(), total results = {}'.format(total)
+    elif target_index == 'user':
+        results, total = User.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
+        print 'Called User.search(), total results = {}'.format(total)
+    elif target_index == 'subreddit':
+        results, total = Subreddit.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
+        print 'Called Subreddit.search(), total results = {}'.format(total)
+    else:
+        return render_template('404.html')
+    
+    results = results.all()
+    next_url = url_for('search', index=target_index, q=g.search_form.q.data, page=page + 1) if total > page * app.config['POSTS_PER_PAGE'] else None
+    prev_url = url_for('search', index=target_index, q=g.search_form.q.data, page=page - 1) if page > 1 else None
+    results_list = zip(results, [None] * len(results)) # Temporarily to match expected input for template
+    return render_template('search.html', title=_('Search'), results_list=results_list, next_url=next_url, prev_url=prev_url, query=g.search_form.q.data, index=target_index)

@@ -48,7 +48,8 @@ class SearchableMixin(object):
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
-class User(db.Model, UserMixin):
+class User(db.Model, UserMixin, SearchableMixin):
+    __searchable__ = ['username']
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(64), index=True, unique=True)
@@ -58,7 +59,7 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='user', lazy='dynamic')    
 
     def __repr__(self):
-        return _l('<User {}>'.format(self.username))
+        return '<User {}>'.format(self.username)
 
     def set_password(self, text_password):
         self.password_hash = generate_password_hash(text_password)
@@ -95,7 +96,7 @@ class Thread(db.Model, SearchableMixin):
     comments = db.relationship('Comment', backref='thread', lazy='dynamic')
 
     def __repr__(self):
-        return _l('<Thread {}>'.format(self.title)) 
+        return '<Thread {}>'.format(self.title) 
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -107,13 +108,15 @@ class Comment(db.Model):
     language = db.Column(db.String(5))
 
     def __repr__(self):
-        return _l('<Comment {}>'.format(self.body)) 
+        return '<Comment {}>'.format(self.body)
 
-class Subreddit(db.Model):
+class Subreddit(db.Model, SearchableMixin):
+    __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
+    description = db.Column(db.String(256), unique=True)
     language = db.Column(db.String(5))
     threads = db.relationship('Thread', backref='subreddit', lazy='dynamic')
 
     def __repr__(self):
-        return _l('<Subreddit {}>'.format(self.name))
+        return '<Subreddit {}>'.format(self.name)
