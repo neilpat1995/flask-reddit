@@ -2,12 +2,14 @@ from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-from app.models import User, Thread
+from app.models import User, Thread, Subreddit
 from flask_babel import _, lazy_gettext as _l
 
+MESSAGE_REQUIRED = _l('This field is required.')
+
 class LoginForm(FlaskForm):
-    username = StringField(_l('Username'), validators=[DataRequired()])
-    password = PasswordField(_l('Password'), validators=[DataRequired()])
+    username = StringField(_l('Username'), validators=[DataRequired(message=MESSAGE_REQUIRED)])
+    password = PasswordField(_l('Password'), validators=[DataRequired(message=MESSAGE_REQUIRED)])
     remember_me = BooleanField(_l('Remember Me'))
     submit = SubmitField(_l('Sign In'))
 
@@ -21,6 +23,11 @@ class CreateThreadForm(FlaskForm):
         thread = Thread.query.filter_by(title = title.data).first()
         if thread is not None:
             raise ValidationError(_('The specified thread title is already in use.'))
+    
+    def validate_subreddit(self, subreddit):
+        existing_subreddit = Subreddit.query.filter_by(name = subreddit.data).first()
+        if existing_subreddit is None:
+            raise ValidationError(_('The specified subreddit does not exist.')) 
 
 class RegistrationForm(FlaskForm):
     username = StringField(_l('Username'), validators=[DataRequired(), Length(min=8, max=64)])

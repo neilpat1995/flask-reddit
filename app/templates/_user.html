@@ -1,26 +1,24 @@
 <table class="table table-bordered table-outer-border" align="center">
     <tbody>
         <tr>
-            <td><a href={{url_for('user', username=user_dummy[0].username)}}>{{ user_dummy[0].username }}</a></td>
+            <td><a href={{url_for('user', username=user.username)}}>{{ user.username }}</a></td>
         </tr>
-        {% if len(user_dummy[0].threads) > 0 %}
-            <tr><p>Last Post: </p></tr>
+        {% if user.threads %}
+            {% set latest_thread = user.threads[-1] %}
+            <tr><td><p>Last Post: </p></td></tr>
             <tr>
-                <td> {{ _('Posted %(date)s', date=moment(user_dummy[0].threads[0]).fromNow()) }}</td>
+                <td> {{ _('Posted %(date)s', date=moment(latest_thread.date).fromNow()) }}</td>
             </tr>
-	    <tr>
-            {% if user_dummy[0].threads[0].language and user_dummy[0].threads[0].language != g.locale %}
-                <td><a href="javascript:translate(
-                                                        '#thread_title{{ user_dummy[0].threads[0].id }}',
-                                                        '#translated_thread_title{{ user_dummy[0].threads[0].id }}',
-                                                        '{{ g.locale }}')">
-                    {{ _('Translate') }}</a></td>
-            {% endif %}
-        </tr>            
             <tr>
-                <td><a href={{ url_for('view_thread', thread_title=user_dummy[0].threads[0].title) }}><b><span id="thread_title{{ user_dummy[0]threads[0].id }}">{{ user_dummy[0].thread[0].title }}</span></b></a></td>
+                {% if latest_thread.language and latest_thread.language != g.locale %}
+                    <td><a id="translate_thread_link{{ latest_thread.id }}" href="javascript:translate(
+                                                    ['#thread_title{{ latest_thread.id }}'],
+                                                    '{{ g.locale }}',
+                                                    '#translate_thread_link{{ latest_thread.id }}')">
+                        {{ _('Translate') }}</a></td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td><b><a id="thread_title{{ latest_thread.id }}" href="{{ url_for('view_thread', thread_title=latest_thread.title) }}">{{ latest_thread.title }}</span></a></b></td>
             </tr>
         {% endif %}
-        <tr>
-            <td><span id="translated_thread_title{{ user_dummy[0].threads[0].id }}"></span></td>
-        </tr>

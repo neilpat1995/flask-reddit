@@ -1,25 +1,22 @@
 <table class="table table-bordered table-outer-border" align="center">
     <tbody>
         <tr>
-            {% if subreddit_author[0].language and subreddit_author[0].language != g.locale %}
-                <td><a href="javascript:translate_thread(
-                                                        '#subreddit_title{{ subreddit_author[0].id }}',
-                                                        '#subreddit_description{{ subreddit_author[0].id }}',
-                                                        '#translated_subreddit_title{{ subreddit_author[0].id }}',
-                                                        '#translated_subreddit_description{{ subreddit_author[0].id }}',
-                                                        '{{ g.locale }}')">
-                    {{ _('Translate') }}</a></td>
+            {% if subreddit.language and subreddit.language != g.locale %}
+                <td>
+                    <a id="translate_subreddit_link{{ subreddit.id }}" href="javascript:translate(
+                                                        ['#subreddit_title{{ subreddit.id }}', '#subreddit_description{{ subreddit.id }}'],
+                                                        '{{ g.locale }}',
+                                                        '#translate_subreddit_link{{ subreddit.id }}')">
+                        {{ _('Translate') }}
+                    </a>
+                </td>
             {% endif %}
         </tr>
         
         <tr>
-            <td><a href={{url_for('subreddit', subreddit_name=subreddit_author[0].name)}}><span class="subreddit_title{{ subreddit_author[0].id }}">{{ subreddit_author[0].name }}</span></a></td>
+            <td><b><a id="subreddit_title{{ subreddit.id }}" href="{{ url_for('subreddit', subreddit_name=subreddit.name) }}">{{ subreddit.name }}</a></b></td>
         </tr>
-        
-        <tr><td><span class="translated_subreddit_title{{ subreddit_author[0].id }}"></span></td></tr>
         
         <tr>
-            <td><span class="subreddit_description{{ subreddit_author[0].id }}">{{ subreddit_author[0].description }}</span></td>
+            <td><span id="subreddit_description{{ subreddit.id }}">{{ subreddit.description }}</span></td>
         </tr>
-        
-        <tr><td><span class="translated_subreddit_title{{ subreddit_author[0].id }}"></span></td></tr> 

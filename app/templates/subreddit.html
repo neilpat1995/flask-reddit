@@ -1,16 +1,31 @@
 {% extends "base.html" %}
+    
+    {% block scripts %}
+		{{ super() }}
+
+		<script type="text/javascript">
+		    $(document).ready(function() {
+				{% for thread in threads %}
+		        	$("#translate_thread_link{{ thread.id }}").click(function(e) {
+		            	e.preventDefault();
+		            	translate(['#thread_title{{ thread.id }}'], '{{ g.locale }}', '#translate_thread_link{{ thread.id }}');
+		        	});
+				{% endfor %}
+		    });
+		</script>    
+    {% endblock %}
 
     {% block app_content %} 
         <a class="btn btn-primary" href={{url_for('create_thread')}}>{{ _('Create New Thread') }}</a>
-        {% for thread_author in threads_authors %}            
+        {% for thread in threads %}            
             {% include "_thread.html" %} 
                     <tr>
-                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread_author[0].title, is_upvote=1, page=page_num) }}>{{ _('Upvote') }}</a></td>
-                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread_author[0].title, is_upvote=-1, page=page_num) }}>{{ _('Downvote') }}</a></td>
+                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread.title, is_upvote=1, page=page_num) }}>{{ _('Upvote') }}</a></td>
+                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread.title, is_upvote=-1, page=page_num) }}>{{ _('Downvote') }}</a></td>
                     </tr>
      
                     <tr>
-                        <td>{{ _( ('{} upvotes'.format(thread_author[0].upvotes) ) ) }}</td>
+                        <td>{{ _( ('{} upvotes'.format(thread.upvotes) ) ) }}</td>
                     </tr>
                 </tbody>
             </table>

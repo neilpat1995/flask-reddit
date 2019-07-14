@@ -1,28 +1,21 @@
 <table class="table table-bordered table-outer-border" align="center">
     <tbody>
+        {% if thread.language and thread.language != g.locale %}
+            <tr>
+                <td>
+                    <a id="translate_thread_link{{ thread.id }}" href="#">{{ _('Translate') }}</a>
+                </td>
+            </tr>
+        {% endif %}
         <tr>
-            {% if thread_author[0].language and thread_author[0].language != g.locale %}
-                <td><a href="javascript:translate_thread(
-                                                        '#thread_title{{ thread_author[0].id }}',
-                                                        '#thread_body{{ thread_author[0].id }}',
-                                                        '#translated_thread_title{{ thread_author[0].id }}',
-                                                        '#translated_thread_body{{ thread_author[0].id }}',
-                                                        '{{ g.locale }}')">
-                    {{ _('Translate') }}</a></td>
-            {% endif %}
-        </tr>
-        <tr>
-            <td><a href={{url_for('subreddit', subreddit_name=thread_author[0].subreddit.name)}}>{{ _('%(subreddit_name)s', subreddit_name=thread_author[0].subreddit.name) }}</a></td>
+            <td><a href={{url_for('subreddit', subreddit_name=thread.subreddit.name)}}>{{ _('%(subreddit_name)s', subreddit_name=thread.subreddit.name) }}</a></td>
         </tr>
         <tr>
             {% set user_link %}
-                <a href={{ url_for('user', username=thread_author[0].user.username) }}>{{ _('%(username)s', username=thread_author[0].user.username) }}</a>
+                <a href={{ url_for('user', username=thread.user.username) }}>{{ _('%(username)s', username=thread.user.username) }}</a>
             {% endset %}
-            <td> {{ _('Posted by %(user)s %(date)s', user=user_link, date=moment(thread_author[0].date).fromNow()) }}</td>
+            <td> {{ _('Posted by %(user)s %(date)s', user=user_link, date=moment(thread.date).fromNow()) }}</td>
         </tr>
         <tr>
-            <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title) }}><b><span id="thread_title{{ thread_author[0].id }}">{{ thread_author[0].title }}</span></b></a></td>
-        </tr>
-        <tr>
-            <td><span id="translated_thread_title{{ thread_author[0].id }}"></span></td>
+            <td><b><a id="thread_title{{ thread.id }}" href="{{ url_for('view_thread', thread_title=thread.title) }}">{{ thread.title }}</a></b></td>
         </tr>

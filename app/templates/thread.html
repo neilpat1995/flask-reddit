@@ -1,37 +1,49 @@
 {% extends "base.html" %}
 
-    {% block app_content %}
-        {% for thread_author in thread_author_singleton %}
-            {% include "_thread.html" %}
-                    <tr><td><span id="thread_body{{ thread_author[0].id }}">{{ thread_author[0].body }}</span></td></tr>
-                    <tr><td><span id="translated_thread_body{{ thread_author[0].id }}"></span></td></tr>
-                    <tr>
-                        <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
-                        <td><a href={{ url_for('view_thread', thread_title=thread_author[0].title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
-                    </tr>
-                    <tr><td>{{ _('%(num_upvotes)s upvotes', num_upvotes=thread_author[0].upvotes) }}</td></tr>
-                </tbody>
-            </table>
-        {% endfor %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#translate_thread_link{{ thread.id }}").click(function(e) {
+                e.preventDefault();
+                translate(['#thread_title{{ thread.id }}', '#thread_body{{ thread.id }}'], '{{ g.locale }}', '#translate_thread_link{{ thread.id }}');
+            });
+        });
+    </script>        
 
-        <hr>
+{% endblock %}
 
-        <a class="btn btn-primary" href={{ url_for('add_comment') }}>{{ _('Post a Comment') }}</a>
+{% block app_content %}
+    {% include "_thread.html" %}
+            <tr><td><span id="thread_body{{ thread.id }}">{{ thread.body }}</span></td></tr>
+            <tr><td><span id="translated_thread_body{{ thread.id }}"></span></td></tr>
+            <tr>
+                <td><a href={{ url_for('view_thread', thread_title=thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
+                <td><a href={{ url_for('view_thread', thread_title=thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
+            </tr>
+            <tr><td>{{ _('%(num_upvotes)s upvotes', num_upvotes=thread.upvotes) }}</td></tr>
+        </tbody>
+    </table>
 
-        {% for comment in comments %}
-            <table>
-                <tr>
-                    <td>{{ _('%(username)s', username=comment.user.username) }}</td>
-                    <td>{{ _('%(num_upvotes)s upvotes', num_upvotes=comment.upvotes) }}</td>
-                    <td>{{ _('%(date)s', date=moment(comment.date).fromNow()) }}</td>
-                </tr>
-                <tr><td><span id="comment{{ comment.id }}">{{ comment.body }}</span></td></tr>
-                <tr>
-                    {% if comment.language and comment.language != g.locale %}
-                        <td><span id="translate_comment{{ comment.id }}"><a href="javascript:translate('#comment{{ comment.id }}', '#translate_comment{{ comment.id }}', '{{ g.locale }}');">{{ _('Translate') }}</a></span></td>
-                    {% endif %}
-                </tr>
-            </table><br>
-        {% endfor %}
+    <hr>
 
-    {% endblock %}
+    <a class="btn btn-primary" href={{ url_for('add_comment') }}>{{ _('Post a Comment') }}</a>
+
+    {% for comment in comments %}
+        <table>
+            <tr>
+                <td>{{ _('%(username)s', username=comment.user.username) }}</td>
+                <td>{{ _('%(num_upvotes)s upvotes', num_upvotes=comment.upvotes) }}</td>
+                <td>{{ _('%(date)s', date=moment(comment.date).fromNow()) }}</td>
+            </tr>
+            {% if comment.language and comment.language != g.locale %}
+            <tr>
+                <td><a id="translate_comment_link{{ comment.id }}" href="javascript:translate('#comment{{ comment.id }}', '#comment{{ comment.id }}', '{{ g.locale }}', '#translate_comment_link{{ comment.id }}');">{{ _('Translate') }}</a></td>
+            </tr>
+            {% endif %}
+
+            <tr><td><span id="comment{{ comment.id }}">{{ comment.body }}</span></td></tr>
+        </table><br>
+    {% endfor %}
+
+{% endblock %}

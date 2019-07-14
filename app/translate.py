@@ -12,7 +12,7 @@ def translate(text, dest_language):
         'X-ClientTraceId': str(uuid.uuid4())
     }
     body = [
-        { 'Text' : text } 
+        { 'Text' : single_text } for single_text in text  
     ]
     base_url = 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0'
     query_params = '&to={}'.format(dest_language)
@@ -24,4 +24,4 @@ def translate(text, dest_language):
         print _('The requested translation destination language was: '), dest_language
         return _('Error: the translation service failed.')
     response_json = r.json()
-    return response_json[0]['translations'][0]['text']
+    return [single_text_results['translations'][0]['text'] for single_text_results in response_json]

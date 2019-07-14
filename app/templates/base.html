@@ -79,60 +79,40 @@
     {{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
 
-    <script>
-        function translate(sourceElem, destElem, destLang) {
-            $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
-            $.post('/translate', {
-                text: $(sourceElem).text(),
-                dest_language: destLang
-            }).done(function(response) {
-                $(destElem).text(response['text'])
-            }).fail(function() {
-                $(destElem).text("{{ _('Error: Could not contact server.') }}");
-            });
-        }
-        
-        function translate_thread(sourceTitleElem, sourceBodyElem, destTitleElem, destBodyElem, destLang) {
-            if (document.getElementById(sourceBodyElem.substring(1)) != null) {
-                //Currently viewing a specific thread
-                $(destTitleElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
-                $(destBodyElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
-                $.post('/translate_thread', {
-                    title_text: $(sourceTitleElem).text(),
-                    body_text: $(sourceBodyElem).text(),
-                    dest_language: destLang
-                }).done(function(response) {
-                    $(destTitleElem).text(response['title_text'])
-                    $(destBodyElem).text(response['body_text']) 
-                }).fail(function() {
-                    $(destTitleElem).text("{{ _('Error: Could not contact server.') }}")
-                    $(destBodyElem).text("{{ _('Error: Could not contact server.') }}");
-                });
-            }
+    <script type="text/javascript">
+        function translate(targetElemIdList, destLang, translateLinkElemId) {
 
-            else {
-                //Viewing main subreddit page or index page
-                $(destTitleElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
-                $.post('/translate_thread', {
-                    title_text: $(sourceTitleElem).text(),
-                    dest_language: destLang
-                }).done(function(response) {
-                    $(destTitleElem).text(response['title_text'])
-                }).fail(function() {
-                    $(destTitleElem).text("{{ _('Error: Could not contact server.') }}");
-                });
-            }
-        }
-        
-        function translate_search_results_title(sourceStaticElem, sourceTranslateElem, destElem, destLang) {
-            $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
+            // Create list of text to translate
+            var sourceElemTextList = targetElemIdList.map(function(targetElemId) {
+                return $(targetElemId).text();
+            });
+            
+            // Maintain list of original source elements to return in case translation fails
+            var sourceElemList = targetElemIdList.map(function(targetElemId) {
+                return $(targetElemId).get(0).outerHTML;
+            });
+
+            // Replace elements with loading images; retain IDs for replacement back to translations/original text
+            $(translateLinkElemId).replaceWith('<img id="' + translateLinkElemId.slice(1) + '" src="{{ url_for('static', filename='loading.gif') }}">');
+            targetElemIdList.forEach(function(targetElemId) {    
+                $(targetElemId).replaceWith('<img id="' + targetElemId.slice(1) + '" src="{{ url_for('static', filename='loading.gif') }}">');
+            });
+
             $.post('/translate', {
-                text: $(sourceTranslateElem).text(),
+                text: sourceElemTextList,
                 dest_language: destLang
             }).done(function(response) {
-                $(destElem).text($(sourceStaticElem).text() + response['text'])
+                console.log('Now in translate() done() callback!')
+                targetElemIdList.forEach(function(targetElemId, elemIndex) {
+                    $(targetElemId).replaceWith(sourceElemList[elemIndex]);
+                    $(targetElemId).text(response['text'][elemIndex]);
+                });
+                $(translateLinkElemId).replaceWith("<p>{{ _('Text was translated from English to your preferred language.') }}</p>");
             }).fail(function() {
-                $(destElem).text("{{ _('Error: Could not contact server.') }}");
+                targetElemIdList.forEach(function(targetElemId, elemIndex) {
+                    $(targetElemId).replaceWith(sourceElemList[elemIndex]);
+                });
+                $(translateLinkElemId).replaceWith("<p>{{ _('Error: Could not translate the selected text.') }}</p>");
             });
         }
     </script>

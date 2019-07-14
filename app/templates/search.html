@@ -2,40 +2,57 @@
 
 {% block scripts %}
     {{ super() }}
+    <script type="text/javascript">
+        /* 
+            Unlike for users and subreddits, thread sub-template does not always know the list of elements to translate.
+            This JQuery call handles this by setting the 'click' event appropriately after the document loads.
+        */
+        {% if index == 'thread' %}
+            $(document).ready(function() {
+                {% for thread in results %}
+                    $("#translate_thread_link{{ thread.id }}").click(function(e) {
+                        e.preventDefault();
+                        translate(['#thread_title{{ thread.id }}'], '{{ g.locale }}', "#translate_thread_link{{ thread.id }}"); 
+                    });
+                {% endfor %}
+            });
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block app_content %}
+    
+    {% if query_language and query_language != g.locale %}
+        <a id="translate_query_link" href="javascript:translate( ['#search_query'],
+                                                            '{{ g.locale }}',
+                                                            '#translate_query_link')">{{ _("Translate") }}</a><br>
+    {% endif %}
     <h1>
-        <span id="search_title">{{ _("Search Results for: ") }}</span>
+        {{ _("Search Results for: ") }}
         <span id="search_query">{{ g.search_form.q.data }}</span><br>
-        <span id="translated_search_title"></span>
     </h1>
-    <a href="javascript:translate_search_results_title('#search_title',
-                                                        '#search_query',
-                                                        '#translated_search_title',
-                                                        '{{ g.locale }}')">{{ _("Translate") }}</a>
     <a class="btn btn-primary btn-lg" href="{{ url_for('search', index='thread', q=query) }}">Threads</a>
     <a class="btn btn-primary btn-lg" href="{{ url_for('search', index='user', q=query) }}">Users</a>
     <a class="btn btn-primary btn-lg" href="{{ url_for('search', index='subreddit', q=query) }}">Subreddits</a>
 
-    {% if not results_list %} 
-        <h3>No search results were found. Please enter a new search query or search category.</h3>
+    {% if not results %} 
+        <h3>{{ _('No search results were found. Please enter a new search query or search category.') }}</h3>
     {% else %}
 
         {% if index == 'thread' %}
-            {% for thread_author in results_list %}
+            {% for thread in results %}
                 {% include '_thread.html' %}
             {% endfor %}   
         {% endif %}    
         
         {% if index == 'user' %}
-            {% for user_dummy in results_list %}
+            {% for user in results %}
                 {% include '_user.html' %}
             {% endfor %}   
         {% endif %}    
 
         {% if index == 'subreddit' %}
-            {% for subreddit_author in results_list %}
+            {% for subreddit in results %}
                 {% include '_subreddit.html' %}
             {% endfor %}   
         {% endif %}    

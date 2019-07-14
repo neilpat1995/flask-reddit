@@ -1,27 +1,34 @@
 {% extends "base.html" %}
 
+	{% block scripts %}
+		{{ super() }}
+		<script type="text/javascript">
+		    $(document).ready(function() {
+				{% for thread in user_threads %}
+		        	$("#translate_thread_link{{ thread.id }}").click(function(e) {
+		            	e.preventDefault();
+		            	translate(['#thread_title{{ thread.id }}'], '{{ g.locale }}', '#translate_thread_link{{ thread.id }}');
+		        	});
+				{% endfor %}
+		    });
+		</script>
+    {% endblock %}
+
     {% block app_content %} 
         
         <h1>{{ _('%(username)s', username=username) }}</h1>
-        {% for user_thread in user_threads %}
-            <table>
-                <tr>
-                    <td><a href={{url_for('subreddit', subreddit_name=user_thread.subreddit.name)}}>{{ _('%(subreddit_name)s, subreddit_name=user_thread.subreddit.name) }}</a>
-                <tr>
-                    <td>{{ _('Posted by %(username)s %(date)s, username=username, date=moment(user_thread.date).fromNow()) }}</td>
-                </tr>
-                <tr>
-                    <td><a href={{url_for('view_thread', thread_title=user_thread.title)}}><b>{{ _('%(title)s', title=user_thread.title) }}</b></a></td>
-                </tr>
+        {% for thread in user_threads %}
+            {% include "_thread.html" %}
+                    
+                    <tr>
+                        <td><a href={{ url_for('user', page=page, username=username, thread_title=thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
+                        <td><a href={{ url_for('user', page=page, username=username, thread_title=thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
+                    </tr>
 
-                <tr>
-                    <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
-                    <td><a href={{ url_for('user', page=page, username=username, thread_title=user_thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
-                </tr>
-
-                <tr>
-                    <td>{{ _('%(num_upvotes)s upvotes', num_upvotes=user_thread.upvotes) }}</td>
-                </tr>
+                    <tr>
+                        <td>{{ _('%(num_upvotes)s upvotes', num_upvotes=thread.upvotes) }}</td>
+                    </tr>
+                </tbody>
             </table>
             <br> 
         {% endfor %}

@@ -36,10 +36,8 @@ def index():
     prev_url = url_for('index', page=thread_page.prev_num) if thread_page.has_prev else None
     next_url = url_for('index', page=thread_page.next_num) if thread_page.has_next else None
     threads = thread_page.items
-    authors = [thread.user for thread in threads]
-    #subreddits = [thread.subreddit for thread in threads]
 
-    return render_template('index.html', threads_authors=zip(threads, authors), prev_url=prev_url, next_url=next_url, page_num = request.args.get('page', 1, int))
+    return render_template('index.html', threads=threads, prev_url=prev_url, next_url=next_url, page_num = request.args.get('page', 1, int))
 
 @app.route('/r/<subreddit_name>')
 def subreddit(subreddit_name):
@@ -59,8 +57,7 @@ def subreddit(subreddit_name):
     prev_url = url_for('subreddit', subreddit_name=subreddit_name, page=subreddit_threads_page.prev_num) if subreddit_threads_page.has_prev else None
     next_url = url_for('subreddit', subreddit_name=subreddit_name, page=subreddit_threads_page.next_num) if subreddit_threads_page.has_next else None
     subreddit_threads = subreddit_threads_page.items
-    authors = [thread.user for thread in subreddit_threads]
-    return render_template("subreddit.html", page_title=_('Reddit - %(subreddit_name)s', subreddit_name=subreddit_name), subreddit_name=subreddit_name, threads_authors=zip(subreddit_threads, authors), prev_url=prev_url, next_url=next_url, page_num = request.args.get('page', 1, int))
+    return render_template("subreddit.html", page_title=_('Reddit - %(subreddit_name)s', subreddit_name=subreddit_name), subreddit_name=subreddit_name, threads=subreddit_threads, prev_url=prev_url, next_url=next_url, page_num = request.args.get('page', 1, int))
 
 @app.route('/user/<username>')
 def user(username):
@@ -110,7 +107,7 @@ def view_thread(thread_title):
     thread = Thread.query.filter_by(title=thread_title).first()
     thread_comments = Comment.query.filter_by(thread=thread).order_by(Comment.date.desc())
     
-    return render_template('thread.html', thread_author_singleton=zip([thread], [thread.user]), page_title=_('Reddit - %(subreddit_name)s - %(thread_title)s', subreddit_name=thread.subreddit.name, thread_title=thread_title), subreddit_name = thread.subreddit.name, comments=thread_comments) 
+    return render_template('thread.html', thread=thread, page_title=_('Reddit - %(subreddit_name)s - %(thread_title)s', subreddit_name=thread.subreddit.name, thread_title=thread.title), subreddit_name = thread.subreddit.name, comments=thread_comments) 
 
 @app.route('/post_comment', methods=['GET','POST'])
 @login_required
@@ -196,7 +193,7 @@ def reset_password(token):
 @app.route('/translate', methods=['POST'])
 @login_required
 def translate_text():
-    return jsonify({'text': translate(request.form['text'],
+    return jsonify({'text': translate(request.form.getlist('text[]'),
                                       request.form['dest_language'])})
 
 @app.route('/translate_thread', methods=['POST'])
@@ -232,5 +229,4 @@ def search():
     results = results.all()
     next_url = url_for('search', index=target_index, q=g.search_form.q.data, page=page + 1) if total > page * app.config['POSTS_PER_PAGE'] else None
     prev_url = url_for('search', index=target_index, q=g.search_form.q.data, page=page - 1) if page > 1 else None
-    results_list = zip(results, [None] * len(results)) # Temporarily to match expected input for template
-    return render_template('search.html', title=_('Search'), results_list=results_list, next_url=next_url, prev_url=prev_url, query=g.search_form.q.data, index=target_index)
+    return render_template('search.html', title=_('Search'), results=results, next_url=next_url, prev_url=prev_url, query=g.search_form.q.data, query_language = guess_language(g.search_form.q.data), index=target_index)
