@@ -30,8 +30,7 @@ app.elasticsearch = Elasticsearch(app.config['ELASTICSEARCH_URL']) if app.config
 
 @babel.localeselector
 def get_locale():
-#    return request.accept_languages.best_match(app.config['LANGUAGES'])
-    return 'es'
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 if not app.debug:
     if app.config['MAIL_SERVER']:

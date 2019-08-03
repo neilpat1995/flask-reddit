@@ -105,3 +105,6 @@ venv.bak/
 
 # Temporary files
 *.swp
+
+# Production server-specific files
+*.pem
