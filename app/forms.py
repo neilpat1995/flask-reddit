@@ -60,7 +60,7 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField(_l('Reset Password'))
 
 class SearchForm(FlaskForm):
-    q = StringField(_l('Search for user or thread'), validators=[DataRequired()])
+    q = StringField(_l('Search for user, thread, or subreddit'), validators=[DataRequired()])
     
     def __init__(self, *args, **kwargs):
         if 'formdata' not in kwargs:

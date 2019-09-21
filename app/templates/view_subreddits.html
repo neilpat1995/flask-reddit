@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+    {% block app_content %}
+        <h1> {{ _('List of subreddits') }}</h1>
+        {% for subreddit in subreddits %}
+            {% include '_subreddit.html' %}
+        {% endfor %}
+    
+       <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous{% if not prev_url %} disabled{% endif %}">
+                    <a href="{{ prev_url or '#' }}">
+                        <span aria-hidden="true">&larr;</span>
+                        {{ _('Previous subreddits') }}
+                    </a>
+                </li>
+                <li class="next{% if not next_url %} disabled{% endif %}">
+                    <a href="{{ next_url or '#' }}">
+                        {{ _('Next subreddits') }}
+                        <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    {% endblock %}

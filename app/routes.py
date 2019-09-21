@@ -230,3 +230,12 @@ def search():
     next_url = url_for('search', index=target_index, q=g.search_form.q.data, page=page + 1) if total > page * app.config['POSTS_PER_PAGE'] else None
     prev_url = url_for('search', index=target_index, q=g.search_form.q.data, page=page - 1) if page > 1 else None
     return render_template('search.html', title=_('Search'), results=results, next_url=next_url, prev_url=prev_url, query=g.search_form.q.data, query_language = guess_language(g.search_form.q.data), index=target_index)
+
+@app.route('/view_subreddits', methods=['GET'])
+def view_subreddits():
+    page_num = request.args.get('page', 1, type=int)
+    subreddits_page = Subreddit.query.paginate(page_num, app.config['POSTS_PER_PAGE'], True)
+    subreddits_items = subreddits_page.items
+    next_url = url_for('view_subreddits', page=page_num+1) if subreddits_page.has_next else None
+    prev_url = url_for('view_subreddits', page=page_num-1) if subreddits_page.has_prev else None
+    return render_template('view_subreddits.html', subreddits=subreddits_items, next_url=next_url, prev_url=prev_url)
