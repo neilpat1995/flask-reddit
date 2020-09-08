@@ -8,7 +8,7 @@ def translate(text, dest_language):
         return _('Error: the translation service is not configured.')
     headers = {
         'Ocp-Apim-Subscription-Key': app.config['MS_TRANSLATOR_KEY'],
-        'Content-type': 'application/json',
+        'Content-type': 'application/json; charset=UTF-8',
         'X-ClientTraceId': str(uuid.uuid4())
     }
     body = [
