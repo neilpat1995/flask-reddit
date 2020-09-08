@@ -18,6 +18,7 @@
     {% block app_content %} 
         
         <a class="btn btn-primary" href={{url_for('create_thread')}}>{{ _('Create New Thread') }}</a>
+        <a class="btn btn-primary" href={{url_for('create_subreddit')}}>{{ _('Create New Subreddit') }}</a>
 
         {% for thread in threads %}
             {% include "_thread.html" %}  

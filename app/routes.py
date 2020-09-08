@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_babel import _, get_locale
 
 from app import app, db
-from app.forms import LoginForm, CreateThreadForm, RegistrationForm, CreateCommentForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm
+from app.forms import LoginForm, CreateThreadForm, RegistrationForm, CreateCommentForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm, CreateSubredditForm
 from app.models import User, Thread, Comment, Subreddit
 from app.email import send_password_reset_email
 from app.translate import translate
@@ -239,3 +239,17 @@ def view_subreddits():
     next_url = url_for('view_subreddits', page=page_num+1) if subreddits_page.has_next else None
     prev_url = url_for('view_subreddits', page=page_num-1) if subreddits_page.has_prev else None
     return render_template('view_subreddits.html', subreddits=subreddits_items, next_url=next_url, prev_url=prev_url)
+
+@app.route('/create_subreddit', methods=['GET','POST'])
+@login_required
+def create_subreddit():
+    form = CreateSubredditForm()
+    if form.validate_on_submit():
+        subreddit_language = guess_language(form.description.data)
+        if subreddit_language == 'UNKNOWN' or len(subreddit_language) > 5:
+            subreddit_language=''
+        new_subreddit = Subreddit(name=form.name.data, description=form.description.data, language=subreddit_language)
+        db.session.add(new_subreddit)
+        db.session.commit()
+        return redirect(session['prior_thread_create_page'])     
+    return render_template('create_subreddit.html', form=form, page_title=_('Reddit - Create Subreddit'))

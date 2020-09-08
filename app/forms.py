@@ -29,6 +29,16 @@ class CreateThreadForm(FlaskForm):
         if existing_subreddit is None:
             raise ValidationError(_('The specified subreddit does not exist.')) 
 
+class CreateSubredditForm(FlaskForm):
+    name = StringField(_l('Name'), validators=[DataRequired(), Length(min=16, max=128)])
+    description = StringField(_l('Description'), validators=[DataRequired(), Length(min=16, max=256)])
+    submit = SubmitField(_l('Submit'))
+
+    def validate_name(self, name):
+        subreddit = Subreddit.query.filter_by(name=name.data).first()
+        if subreddit is not None:
+            raise ValidationError(_('The specified subreddit name is already in use.'))
+
 class RegistrationForm(FlaskForm):
     username = StringField(_l('Username'), validators=[DataRequired(), Length(min=8, max=64)])
     email = StringField(_l('Email'), validators=[DataRequired(), Email(), Length(max=64)])
