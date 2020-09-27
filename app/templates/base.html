@@ -104,7 +104,6 @@
                 text: sourceElemTextList,
                 dest_language: destLang
             }).done(function(response) {
-                console.log('Now in translate() done() callback!')
                 targetElemIdList.forEach(function(targetElemId, elemIndex) {
                     $(targetElemId).replaceWith(sourceElemList[elemIndex]);
                     $(targetElemId).text(response['text'][elemIndex]);

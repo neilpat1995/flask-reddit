@@ -19,9 +19,6 @@ def translate(text, dest_language):
     endpoint_url = base_url + query_params
     r = requests.post(endpoint_url, headers=headers, json=body)
     if r.status_code != 200:
-        print _('Translation API response code: '), r.status_code
-        print _('The requested text to translate was: '), text
-        print _('The requested translation destination language was: '), dest_language
         return _('Error: the translation service failed.')
     response_json = r.json()
     return [single_text_results['translations'][0]['text'] for single_text_results in response_json]

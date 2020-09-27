@@ -191,38 +191,22 @@ def reset_password(token):
     return render_template('reset_password.html', form=form, page_title=_('Reddit - Reset Password'))
 
 @app.route('/translate', methods=['POST'])
-@login_required
 def translate_text():
     return jsonify({'text': translate(request.form.getlist('text[]'),
                                       request.form['dest_language'])})
 
-@app.route('/translate_thread', methods=['POST'])
-@login_required
-def translate_thread_text():
-    if request.form.has_key('body_text'):
-        # Perform title and body translations
-        return jsonify({'title_text': translate(request.form['title_text'], request.form['dest_language']),
-                        'body_text': translate(request.form['body_text'], request.form['dest_language'])})
-    else:
-        # Perform only title translation
-        return jsonify({'title_text': translate(request.form['title_text'], request.form['dest_language'])})
-
 @app.route('/search', methods=['GET'])
 def search():
-    print 'Hit the /search route!'
     if not g.search_form.validate():
         return redirect(url_for('index'))
     page = request.args.get('page', 1, type=int)
     target_index = request.args.get('index', 'thread')
     if target_index == 'thread':
         results, total = Thread.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
-        print 'Called Thread.search(), total results = {}'.format(total)
     elif target_index == 'user':
         results, total = User.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
-        print 'Called User.search(), total results = {}'.format(total)
     elif target_index == 'subreddit':
         results, total = Subreddit.search(g.search_form.q.data, page, app.config['POSTS_PER_PAGE'])
-        print 'Called Subreddit.search(), total results = {}'.format(total)
     else:
         return render_template('404.html')
     
