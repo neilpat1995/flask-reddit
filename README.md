@@ -1,5 +1,5 @@
 # flask-reddit
-A basic implementation of Reddit using Flask.
+A basic implementation of Reddit using Flask, Bootstrap, and MySQL, and deployed onto an SSL-encrypted Nginx web server backed by Gunicorn.
 
 App features:
 1. Creating new subreddits
