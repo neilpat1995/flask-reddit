@@ -21,8 +21,8 @@
         {% for thread in threads %}            
             {% include "_thread.html" %} 
                     <tr>
-                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread.title, is_upvote=1, page=page_num) }}>{{ _('Upvote') }}</a></td>
-                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread.title, is_upvote=-1, page=page_num) }}>{{ _('Downvote') }}</a></td>
+                        <td><a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread.title, is_upvote=1, page=page_num) }}>{{ _('Upvote') }}</a>
+                            <a class="btn btn-info" href= {{ url_for('subreddit', subreddit_name=subreddit_name, thread_title=thread.title, is_upvote=-1, page=page_num) }}>{{ _('Downvote') }}</a></td>
                     </tr>
      
                     <tr>

@@ -21,8 +21,8 @@
             {% include "_thread.html" %}
                     
                     <tr>
-                        <td><a href={{ url_for('user', page=page, username=username, thread_title=thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
-                        <td><a href={{ url_for('user', page=page, username=username, thread_title=thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
+                        <td><a href={{ url_for('user', page=page, username=username, thread_title=thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a>
+                            <a href={{ url_for('user', page=page, username=username, thread_title=thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
                     </tr>
 
                     <tr>

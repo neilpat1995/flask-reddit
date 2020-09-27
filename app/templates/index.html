@@ -22,8 +22,8 @@
 
         {% for thread in threads %}
             {% include "_thread.html" %}  
-                        <td><a class="btn btn-info" href= {{ url_for('index', page=page_num, thread_title=thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a></td>
-                        <td><a class="btn btn-info" href= {{ url_for('index', page=page_num, thread_title=thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
+                        <td><a class="btn btn-info" href= {{ url_for('index', page=page_num, thread_title=thread.title, is_upvote=1) }}>{{ _('Upvote') }}</a>     
+                            <a class="btn btn-info" href= {{ url_for('index', page=page_num, thread_title=thread.title, is_upvote=-1) }}>{{ _('Downvote') }}</a></td>
                     </tr>
          
                     <tr>
