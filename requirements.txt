@@ -1,6 +1,6 @@
 3to2==1.1.1
 alembic==1.0.5
-Babel==2.6.0
+Babel==2.9.1
 blinker==1.4
 certifi==2019.3.9
 chardet==3.0.4
